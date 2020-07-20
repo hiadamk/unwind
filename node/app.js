@@ -4,8 +4,32 @@ const fs = require('fs').promises;
 const puppeteer = require('puppeteer');
 const path = require('path');
 const moment = require('moment');
+const runes = require('runes');
  
 function generateTweetCard(tweet_details){
+
+    var imagesContent  = "";
+
+    if(tweet_details.media.length > 0){
+
+        var imageDivs = ""  ;
+        for (var i = 0; i < tweet_details.media.length; i++) {
+            imageDivs = imageDivs + 
+            `<div class="col-sm-12">
+                <img src="${tweet_details.media[i]}" class="img-fluid rounded-image">
+            </div>
+          `
+        }
+
+        imagesContent = 
+        `
+        <div class="row">
+            ${imageDivs}
+        </div>
+        
+        `
+    } 
+
     return `
     <div class="container mt-3">
         <div class="card">
@@ -34,6 +58,7 @@ function generateTweetCard(tweet_details){
                 <div class="row mx-3 mt-1">
                     <p class="card-text"><small class="text-muted">${tweet_details.date.format('LLL')}</small></p>
             </div>
+            ${imagesContent}
             </div>
             <!-- <img src="https://static.timesofisrael.com/jewishndev/uploads/2019/11/1186499916.jpg" class="card-img-top"> -->
         </div>
@@ -47,7 +72,6 @@ function generateTweetCard(tweet_details){
     async function getTweetImages(tweet){
 
         var photoURLs = [];
-        console.log(tweet);
         if(tweet.extended_entities == null){
             return photoURLs
         }else{
@@ -66,9 +90,8 @@ function generateTweetCard(tweet_details){
             return tweet
         }else{
             var media = await getTweetImages(tweet.data)
-            
             return {
-                'tweet_text' : tweet.data.full_text.substring(tweet.data.display_text_range[0], tweet.data.display_text_range[1]).replace(/\n/g, "<br />"),
+                'tweet_text' : runes.substr(tweet.data.full_text, tweet.data.display_text_range[0], tweet.data.display_text_range[1]).replace(/\n/g, "<br />"),
                 'user' : tweet.data.user.name,
                 'user_handle' : tweet.data.user.screen_name,
                 'user_display_image' : tweet.data.user.profile_image_url_https,
@@ -112,9 +135,7 @@ function generateTweetCard(tweet_details){
         return tweets.reverse();
     }
 
-    // const tweets = await getAllTweets('1284261012749774849');
-
-    const tweets = await getAllTweets('1284930593843798023');
+    const tweets = await getAllTweets('1285236665867554818');
 
     if(tweets.length == 0){
         console.log("Unable to find tweet")
@@ -151,7 +172,7 @@ function generateTweetCard(tweet_details){
             </html>
         `
         
-        fs.writeFile("./generated/tweet.html", html)
+        fs.writeFile("./generated/tweet.html", html, {encoding: 'utf-8'})
         .then((data) => {})
         .catch((err) => {
             console.log(err);
