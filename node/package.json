@@ -1,0 +1,19 @@
+{
+  "name": "shareable",
+  "version": "1.0.0",
+  "description": "A project to unwind twitter threads",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Kona",
+  "license": "ISC",
+  "dependencies": {
+    "config.json": "0.0.4",
+    "fs": "0.0.1-security",
+    "moment": "^2.27.0",
+    "path": "^0.12.7",
+    "puppeteer": "^5.2.0",
+    "twit": "^2.2.11"
+  }
+}
