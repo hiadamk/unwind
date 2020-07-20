@@ -117,10 +117,10 @@ dist
 
 
 #config
-.node/config.json
+node/config.json
 
 #generated files
-.node/generated/
+node/generated/
 
 #mac os
 .DS_Store
