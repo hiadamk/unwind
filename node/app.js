@@ -31,7 +31,7 @@ function generateTweetCard(tweet_details){
     } 
 
     return `
-    <div class="container mt-3">
+    <div class="container my-3">
         <div class="card">
             <div class="card-body">
                 <!-- Header area -->
@@ -60,7 +60,6 @@ function generateTweetCard(tweet_details){
             </div>
             ${imagesContent}
             </div>
-            <!-- <img src="https://static.timesofisrael.com/jewishndev/uploads/2019/11/1186499916.jpg" class="card-img-top"> -->
         </div>
     </div>
 `
@@ -96,6 +95,9 @@ function generateTweetCard(tweet_details){
                 'user_handle' : tweet.data.user.screen_name,
                 'user_display_image' : tweet.data.user.profile_image_url_https,
                 'date' : moment(tweet.data.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en'),
+                'urls' : tweet.data.entities.urls,
+                'user_mentions' : tweet.data.entities.user_mentions,
+                'hashtags' : tweet.data.entities.hashtags,
                 'media' : media,
                 'isQuote': tweet.data.is_quote_status,
                 'quoted_tweet_id' :  tweet.data.quoted_status_id_str
@@ -110,6 +112,31 @@ function generateTweetCard(tweet_details){
         </div>
         </div>
         `
+    }
+
+    function formatTweetText(tweetDetails){
+
+        var tweet = tweetDetails;
+        var text = tweet.tweet_text;
+        const urls = tweet.urls;
+        const user_mentions = tweet.user_mentions;
+        const hashtags = tweet.hashtags;
+        
+        for (var i = 0; i < urls.length; i++) {
+            text = text.replace(urls[i].url, `<span class="url">${urls[i].expanded_url}</span>`);
+        }
+
+        for (var i = 0; i < user_mentions.length; i++) {
+            text = text.replace(`@${user_mentions[i].screen_name}`, `<span class="url">@${user_mentions[i].screen_name}</span>`);
+        }
+
+        for (var i = 0; i < hashtags.length; i++) {
+            text = text.replace(`#${hashtags[i].text}`, `<span class="url">#${hashtags[i].text}</span>`);
+        }
+        
+
+        tweet.tweet_text = text
+        return text;
     }
 
     async function getAllTweets(id){
@@ -135,7 +162,7 @@ function generateTweetCard(tweet_details){
         return tweets.reverse();
     }
 
-    const tweets = await getAllTweets('1285236665867554818');
+    const tweets = await getAllTweets('1285844079222366208');
 
     if(tweets.length == 0){
         console.log("Unable to find tweet")
@@ -144,6 +171,7 @@ function generateTweetCard(tweet_details){
 
         for (var i = 0; i < tweets.length; i++) {
             if(typeof tweets[i] === 'object' && tweets[i] !== null ){
+                tweets[i].tweet_text = formatTweetText(tweets[i])
                 cards_str = cards_str + generateTweetCard(tweets[i])
             }else{
                 cards_str = cards_str + tweets[i]
@@ -180,7 +208,8 @@ function generateTweetCard(tweet_details){
         
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        await page.setViewport({width: 1440, height: 900, deviceScaleFactor: 2});
+        await page.setViewport({width: 600, height: 100, deviceScaleFactor: 2});
+
         await page.goto(`file:${path.join(__dirname, './generated/tweet.html')}`);
         await page.screenshot({path: './generated/tweet.png', fullPage: true });
         await browser.close();
