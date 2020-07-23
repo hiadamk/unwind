@@ -65,6 +65,14 @@ function generateTweetCard(tweet_details){
 `
 }
 
+function escapeRegExp(string) {
+    return string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(escapeRegExp(find) + '\\b', 'g'), replace);
+  }
+
 (async () => {
     const twitter = new Twit(config.credentials)
 
@@ -98,6 +106,7 @@ function generateTweetCard(tweet_details){
                 'urls' : tweet.data.entities.urls,
                 'user_mentions' : tweet.data.entities.user_mentions,
                 'hashtags' : tweet.data.entities.hashtags,
+                'symbols' : tweet.data.entities.symbols,
                 'media' : media,
                 'isQuote': tweet.data.is_quote_status,
                 'quoted_tweet_id' :  tweet.data.quoted_status_id_str
@@ -121,17 +130,22 @@ function generateTweetCard(tweet_details){
         const urls = tweet.urls;
         const user_mentions = tweet.user_mentions;
         const hashtags = tweet.hashtags;
+        const symbols = tweet.symbols;
         
         for (var i = 0; i < urls.length; i++) {
-            text = text.replace(urls[i].url, `<span class="url">${urls[i].expanded_url}</span>`);
+            text = replaceAll(text, urls[i].url, `<span class="url">${urls[i].expanded_url}</span>`);
         }
 
         for (var i = 0; i < user_mentions.length; i++) {
-            text = text.replace(`@${user_mentions[i].screen_name}`, `<span class="url">@${user_mentions[i].screen_name}</span>`);
+            text = replaceAll(text, `@${user_mentions[i].screen_name}`, `<span class="url">@${user_mentions[i].screen_name}</span>`)
         }
 
         for (var i = 0; i < hashtags.length; i++) {
-            text = text.replace(`#${hashtags[i].text}`, `<span class="url">#${hashtags[i].text}</span>`);
+            text = replaceAll(text, `#${hashtags[i].text}`, `<span class="url">#${hashtags[i].text}</span>`);
+        }
+
+        for (var i = 0; i < symbols.length; i++) {
+            text = replaceAll(text, `$${symbols[i].text}`, `<span class="url">$${symbols[i].text}</span>`)
         }
         
 
@@ -162,7 +176,7 @@ function generateTweetCard(tweet_details){
         return tweets.reverse();
     }
 
-    const tweets = await getAllTweets('1280835629836886017');
+    const tweets = await getAllTweets('1286033970598158336');
 
     if(tweets.length == 0){
         console.log("Unable to find tweet")
