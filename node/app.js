@@ -52,7 +52,7 @@ function generateTweetCard(tweet_details){
 
                 <!-- Body Area -->
                 
-                <div class="row mx-3 mt-1">
+                <div class="row mx-3 mt-1 d-block">
                     <p class="card-text">${tweet_details.tweet_text}</p>                    
                 </div>
                 <div class="row mx-3 mt-1">
@@ -162,7 +162,7 @@ function generateTweetCard(tweet_details){
         return tweets.reverse();
     }
 
-    const tweets = await getAllTweets('1285844079222366208');
+    const tweets = await getAllTweets('1280835629836886017');
 
     if(tweets.length == 0){
         console.log("Unable to find tweet")
@@ -208,7 +208,7 @@ function generateTweetCard(tweet_details){
         
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        await page.setViewport({width: 600, height: 100, deviceScaleFactor: 2});
+        await page.setViewport({width: 600, height: 400, deviceScaleFactor: 2});
 
         await page.goto(`file:${path.join(__dirname, './generated/tweet.html')}`);
         await page.screenshot({path: './generated/tweet.png', fullPage: true });
