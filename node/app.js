@@ -96,18 +96,18 @@ function replaceAll(str, find, replace) {
         if(tweet.isError){
             return tweet
         }else{
-            var media = await getTweetImages(tweet.data)
+            
             return {
                 'tweet_text' : runes.substr(tweet.data.full_text, tweet.data.display_text_range[0], tweet.data.display_text_range[1]).replace(/\n/g, "<br />"),
                 'user' : tweet.data.user.name,
                 'user_handle' : tweet.data.user.screen_name,
-                'user_display_image' : tweet.data.user.profile_image_url_https,
+                'user_display_image' : tweet.data.user.profile_image_url_https.replace('_normal', ''),
                 'date' : moment(tweet.data.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en'),
                 'urls' : tweet.data.entities.urls,
                 'user_mentions' : tweet.data.entities.user_mentions,
                 'hashtags' : tweet.data.entities.hashtags,
                 'symbols' : tweet.data.entities.symbols,
-                'media' : media,
+                'media' : await getTweetImages(tweet.data),
                 'isQuote': tweet.data.is_quote_status,
                 'quoted_tweet_id' :  tweet.data.quoted_status_id_str
             }
