@@ -126,13 +126,13 @@ function replaceAll(str, find, replace) {
 
     function formatTweetText(tweetDetails) {
 
-        console.log(tweetDetails)
         var tweet = tweetDetails;
         var text = tweet.tweet_text;
         const urls = tweet.urls;
         const user_mentions = tweet.user_mentions;
         const hashtags = tweet.hashtags;
         const symbols = tweet.symbols;
+        const quoted_tweet_id = tweet.quoted_tweet_id
 
         for (var i = 0; i < urls.length; i++) {
             text = replaceAll(text, urls[i].url, `<span class="url">${urls[i].expanded_url}</span>`);
@@ -150,6 +150,15 @@ function replaceAll(str, find, replace) {
             text = replaceAll(text, `$${symbols[i].text}`, `<span class="url">$${symbols[i].text}</span>`)
         }
 
+        if(tweet.isQuote){
+            const url_regex = new RegExp(/<span class="url">https?:\/\/twitter\.com\/\w+\/status(es)?\/(\d+)(\?s=\d+)?<\/span>/g)
+            matches = text.match(url_regex)
+            for (var i = 0; i < matches.length; i++) {
+                if(matches[i].includes(quoted_tweet_id)){
+                    text = text.replace(matches[i], '[Quoted Tweet Shown Below]')
+                }
+            }
+        }
 
         tweet.tweet_text = text
         return text;
@@ -173,7 +182,7 @@ function replaceAll(str, find, replace) {
         }
     }
 
-    var tweets = await getAllTweets('1275125994190495744');
+    var tweets = await getAllTweets('1275125879555919872');
     tweets = tweets.reverse();
 
     if (tweets.length == 0) {
