@@ -5,30 +5,30 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 const moment = require('moment');
 const runes = require('runes');
- 
-function generateTweetCard(tweet_details){
 
-    var imagesContent  = "";
+function generateTweetCard(tweet_details) {
 
-    if(tweet_details.media.length > 0){
+    var imagesContent = "";
 
-        var imageDivs = ""  ;
+    if (tweet_details.media.length > 0) {
+
+        var imageDivs = "";
         for (var i = 0; i < tweet_details.media.length; i++) {
-            imageDivs = imageDivs + 
-            `<div class="col-sm-12">
+            imageDivs = imageDivs +
+                `<div class="col-sm-12">
                 <img src="${tweet_details.media[i]}" class="img-fluid rounded-image">
             </div>
           `
         }
 
-        imagesContent = 
-        `
+        imagesContent =
+            `
         <div class="row">
             ${imageDivs}
         </div>
         
         `
-    } 
+    }
 
     return `
     <div class="container my-3">
@@ -71,50 +71,50 @@ function escapeRegExp(string) {
 
 function replaceAll(str, find, replace) {
     return str.replace(new RegExp(escapeRegExp(find) + '\\b', 'g'), replace);
-  }
+}
 
 (async () => {
     const twitter = new Twit(config.credentials)
 
-    async function getTweetImages(tweet){
+    async function getTweetImages(tweet) {
 
         var photoURLs = [];
-        if(tweet.extended_entities == null){
+        if (tweet.extended_entities == null) {
             return photoURLs
-        }else{
+        } else {
             const media = tweet.extended_entities.media;
             for (var i = 0; i < media.length; i++) {
                 photoURLs.push(media[i].media_url_https);
             }
             return photoURLs;
         }
-   
+
     }
 
-    async function getTweet(id){
-        const tweet = await twitter.get('statuses/show/:id', { id: id, tweet_mode : 'extended' }).catch((error) => {return {'data' : error.message, 'isError' : true}})
-        if(tweet.isError){
+    async function getTweet(id) {
+        const tweet = await twitter.get('statuses/show/:id', { id: id, tweet_mode: 'extended' }).catch((error) => { return { 'data': error.message, 'isError': true } })
+        if (tweet.isError) {
             return tweet
-        }else{
-            
+        } else {
             return {
-                'tweet_text' : runes.substr(tweet.data.full_text, tweet.data.display_text_range[0], tweet.data.display_text_range[1]).replace(/\n/g, "<br />"),
-                'user' : tweet.data.user.name,
-                'user_handle' : tweet.data.user.screen_name,
-                'user_display_image' : tweet.data.user.profile_image_url_https.replace('_normal', ''),
-                'date' : moment(tweet.data.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en'),
-                'urls' : tweet.data.entities.urls,
-                'user_mentions' : tweet.data.entities.user_mentions,
-                'hashtags' : tweet.data.entities.hashtags,
-                'symbols' : tweet.data.entities.symbols,
-                'media' : await getTweetImages(tweet.data),
+                'tweet_text': runes.substr(tweet.data.full_text, tweet.data.display_text_range[0], tweet.data.display_text_range[1]).replace(/\n/g, "<br />"),
+                'user': tweet.data.user.name,
+                'user_handle': tweet.data.user.screen_name,
+                'user_display_image': tweet.data.user.profile_image_url_https.replace('_normal', ''),
+                'date': moment(tweet.data.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en'),
+                'urls': tweet.data.entities.urls,
+                'user_mentions': tweet.data.entities.user_mentions,
+                'hashtags': tweet.data.entities.hashtags,
+                'symbols': tweet.data.entities.symbols,
+                'media': await getTweetImages(tweet.data),
                 'isQuote': tweet.data.is_quote_status,
-                'quoted_tweet_id' :  tweet.data.quoted_status_id_str
+                'quoted_tweet_id': tweet.data.quoted_status_id_str,
+                'in_reply_to_status_id': tweet.data.in_reply_to_status_id_str,
             }
         }
     }
 
-    function addDashedConnector(){
+    function addDashedConnector() {
         return `
         <div class="container mt-3">
         <div class="vertical-line col-sm-1 col-sm-offset-3">
@@ -123,7 +123,7 @@ function replaceAll(str, find, replace) {
         `
     }
 
-    function formatTweetText(tweetDetails){
+    function formatTweetText(tweetDetails) {
 
         var tweet = tweetDetails;
         var text = tweet.tweet_text;
@@ -131,7 +131,7 @@ function replaceAll(str, find, replace) {
         const user_mentions = tweet.user_mentions;
         const hashtags = tweet.hashtags;
         const symbols = tweet.symbols;
-        
+
         for (var i = 0; i < urls.length; i++) {
             text = replaceAll(text, urls[i].url, `<span class="url">${urls[i].expanded_url}</span>`);
         }
@@ -147,54 +147,45 @@ function replaceAll(str, find, replace) {
         for (var i = 0; i < symbols.length; i++) {
             text = replaceAll(text, `$${symbols[i].text}`, `<span class="url">$${symbols[i].text}</span>`)
         }
-        
+
 
         tweet.tweet_text = text
         return text;
     }
 
-    async function getAllTweets(id){
-        var tweets =  [];
-        
+    async function getAllTweets(id) {
         var tweet = await getTweet(id);
-        var isQuote = true;
-        while(isQuote){
-            if(tweet.isError){
-                isQuote = false;
-            }else{
-                tweets.push(tweet);
-                if(tweet.isQuote){
-                    tweet = await getTweet(tweet.quoted_tweet_id);
-                    tweets.push(addDashedConnector())
-                    isQuote = true;
-                }else{
-                    isQuote = false;
-                }
+        if (tweet.isError) {
+            return [];
+        } else {
+            if (tweet.isQuote) {
+                return [].concat([tweet, addDashedConnector()], await getAllTweets(tweet.quoted_tweet_id))
+            } else {
+                return [].concat([tweet])
             }
         }
-
-        return tweets.reverse();
     }
 
-    const tweets = await getAllTweets('1286033970598158336');
+    var tweets = await getAllTweets('1284672347073581057');
+    tweets = tweets.reverse();
 
-    if(tweets.length == 0){
+    if (tweets.length == 0) {
         console.log("Unable to find tweet")
-    }else{
+    } else {
         var cards_str = "";
 
         for (var i = 0; i < tweets.length; i++) {
-            if(typeof tweets[i] === 'object' && tweets[i] !== null ){
+            if (typeof tweets[i] === 'object' && tweets[i] !== null) {
                 tweets[i].tweet_text = formatTweetText(tweets[i])
                 cards_str = cards_str + generateTweetCard(tweets[i])
-            }else{
+            } else {
                 cards_str = cards_str + tweets[i]
             }
-            
+
         }
 
-        const html = 
-        `
+        const html =
+            `
         <!DOCTYPE html>
             <html lang="en">
                 <head>
@@ -213,19 +204,19 @@ function replaceAll(str, find, replace) {
                 </body>
             </html>
         `
-        
-        fs.writeFile("./generated/tweet.html", html, {encoding: 'utf-8'})
-        .then((data) => {})
-        .catch((err) => {
-            console.log(err);
-        });
-        
+
+        fs.writeFile("./generated/tweet.html", html, { encoding: 'utf-8' })
+            .then((data) => { })
+            .catch((err) => {
+                console.log(err);
+            });
+
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        await page.setViewport({width: 600, height: 400, deviceScaleFactor: 2});
+        await page.setViewport({ width: 600, height: 400, deviceScaleFactor: 2 });
 
         await page.goto(`file:${path.join(__dirname, './generated/tweet.html')}`);
-        await page.screenshot({path: './generated/tweet.png', fullPage: true });
+        await page.screenshot({ path: './generated/tweet.png', fullPage: true });
         await browser.close();
 
     }
