@@ -110,6 +110,7 @@ function replaceAll(str, find, replace) {
                 'isQuote': tweet.data.is_quote_status,
                 'quoted_tweet_id': tweet.data.quoted_status_id_str,
                 'in_reply_to_status_id': tweet.data.in_reply_to_status_id_str,
+                'isReply' : tweet.data.in_reply_to_status_id_str != null
             }
         }
     }
@@ -125,6 +126,7 @@ function replaceAll(str, find, replace) {
 
     function formatTweetText(tweetDetails) {
 
+        console.log(tweetDetails)
         var tweet = tweetDetails;
         var text = tweet.tweet_text;
         const urls = tweet.urls;
@@ -158,7 +160,12 @@ function replaceAll(str, find, replace) {
         if (tweet.isError) {
             return [];
         } else {
-            if (tweet.isQuote) {
+            if (tweet.isReply && tweet.isQuote){
+                quoted_tweet = await getTweet(tweet.quoted_tweet_id);
+                return [].concat([quoted_tweet], [addDashedConnector(), tweet, addDashedConnector()], await getAllTweets(tweet.in_reply_to_status_id))
+            }else if(tweet.isReply){
+                return [].concat([tweet, addDashedConnector()], await getAllTweets(tweet.in_reply_to_status_id))
+            }else if (tweet.isQuote) {
                 return [].concat([tweet, addDashedConnector()], await getAllTweets(tweet.quoted_tweet_id))
             } else {
                 return [].concat([tweet])
@@ -166,7 +173,7 @@ function replaceAll(str, find, replace) {
         }
     }
 
-    var tweets = await getAllTweets('1284672347073581057');
+    var tweets = await getAllTweets('1275125994190495744');
     tweets = tweets.reverse();
 
     if (tweets.length == 0) {
