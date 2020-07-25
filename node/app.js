@@ -182,7 +182,6 @@ function replaceAll(str, find, replace) {
         }
     }
 
-
     const tweet_id = '1275125994190495744'
     var tweets = await getAllTweets(tweet_id);
     tweets = tweets.reverse();
@@ -233,7 +232,8 @@ function replaceAll(str, find, replace) {
         const page = await browser.newPage();
         await page.setViewport({ width: 600, height: 400, deviceScaleFactor: 2 });
 
-        await page.goto(`file:${path.join(__dirname, './generated/tweet.html')}`);
+        // await page.goto(`file:${path.join(__dirname, './generated/tweet.html')}`);
+        await page.goto(`data:text/html,${html}`, { waitUntil: 'networkidle0' });
         await page.screenshot({ path: `./generated/tweet-${tweet_id}.png`, fullPage: true });
         await browser.close();
 

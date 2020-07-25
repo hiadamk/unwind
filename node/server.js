@@ -1,0 +1,35 @@
+const express = require('express');
+const tweet_utils = require('./utils/tweet_utils');
+const regex_utils = require('./utils/regex_utils');
+const html_utils = require('./utils/html_utils');
+const pupeteer_utils = require('./utils/pupeteer_utils');
+const app = express();
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
+
+app.post('/api/tweet/', async function(req, res){
+
+  if(req.body.url == null){
+    res.send({'is_err' : true, 'err_msg' : 'No Url'})
+    return
+  }
+  console.log(req.body.url)
+  const tweet_id = regex_utils.getTweetId(req.body.url)
+  if(tweet_id == null){
+    res.send({'is_err' : true, 'err_msg' : 'Poor Tweet Id'})
+    return
+  }
+  const tweets = await tweet_utils.getAllTweets(tweet_id);
+  tweets.reverse();
+  const html = html_utils.generateImageHTML(tweets);
+  const image = await pupeteer_utils.getScreenshot(html);
+  res.contentType('image/jpeg');
+  res.send(image);
+})
+
+app.listen(3000,function() {
+    console.log('Server is Live')
+});

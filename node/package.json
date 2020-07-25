@@ -4,17 +4,23 @@
   "description": "A project to unwind twitter threads",
   "main": "app.js",
   "scripts": {
+    "start" : "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Adam Kona",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "config.json": "0.0.4",
+    "express": "^4.17.1",
     "fs": "0.0.1-security",
     "moment": "^2.27.0",
     "path": "^0.12.7",
     "puppeteer": "^5.2.0",
     "runes": "^0.4.3",
     "twit": "^2.2.11"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
