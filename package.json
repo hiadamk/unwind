@@ -4,7 +4,8 @@
   "description": "A project to unwind twitter threads",
   "main": "src/server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start" : "node src/server.js",
+    "local_start": "nodemon -r dotenv/config src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Adam Kona",

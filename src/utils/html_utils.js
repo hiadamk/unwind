@@ -104,9 +104,11 @@ function formatTweetText(tweetDetails) {
     if(tweet.isQuote){
         const url_regex = new RegExp(/<span class="url">https?:\/\/twitter\.com\/\w+\/status(es)?\/(\d+)(\?s=\d+)?<\/span>/g)
         matches = text.match(url_regex)
-        for (var i = 0; i < matches.length; i++) {
-            if(matches[i].includes(quoted_tweet_id)){
-                text = text.replace(matches[i], '[Quoted Tweet Shown Below]')
+        if(matches != null){
+            for (var i = 0; i < matches.length; i++) {
+                if(matches[i].includes(quoted_tweet_id)){
+                    text = text.replace(matches[i], '[Quoted Tweet Shown Below]')
+                }
             }
         }
     }
