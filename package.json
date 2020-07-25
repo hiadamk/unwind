@@ -1,10 +1,10 @@
 {
-  "name": "shareable",
+  "name": "unwind",
   "version": "1.0.0",
   "description": "A project to unwind twitter threads",
-  "main": "server.js",
-  "scripts": { 
-    "start" : "nodemon server.js",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Adam Kona",
@@ -21,6 +21,7 @@
     "twit": "^2.2.11"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "nodemon": "^2.0.4"
   }
 }

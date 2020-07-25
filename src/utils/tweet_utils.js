@@ -1,6 +1,12 @@
 const Twit = require('twit')
-const config = require('config.json')('./config.json');
-const twitter = new Twit(config.credentials)
+require('dotenv').config();
+const twitter = new Twit({
+    consumer_key:         process.env.twitter_consumer_key,
+    consumer_secret:      process.env.twitter_consumer_secret,
+    access_token:         process.env.twitter_access_token,
+    access_token_secret:  process.env.twitter_access_token_secret,
+    timeout_ms:           process.env.twitter_timeout_ms,
+})
 const moment = require('moment');
 const runes = require('runes');
 const html_utils = require('./html_utils')

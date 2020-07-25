@@ -16,7 +16,6 @@ app.post('/api/tweet/', async function(req, res){
     res.send({'is_err' : true, 'err_msg' : 'No Url'})
     return
   }
-  console.log(req.body.url)
   const tweet_id = regex_utils.getTweetId(req.body.url)
   if(tweet_id == null){
     res.send({'is_err' : true, 'err_msg' : 'Poor Tweet Id'})
