@@ -1,5 +1,4 @@
 const Twit = require('twit')
-// require('dotenv').config();
 const twitter = new Twit({
     consumer_key:         process.env.twitter_consumer_key,
     consumer_secret:      process.env.twitter_consumer_secret,
