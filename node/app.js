@@ -16,7 +16,7 @@ function generateTweetCard(tweet_details) {
         for (var i = 0; i < tweet_details.media.length; i++) {
             imageDivs = imageDivs +
                 `<div class="col-sm-12">
-                <img src="${tweet_details.media[i]}" class="img-fluid rounded-image">
+                <img src="${tweet_details.media[i]}" class="img-fluid w-100 rounded-image">
             </div>
           `
         }
@@ -182,7 +182,9 @@ function replaceAll(str, find, replace) {
         }
     }
 
-    var tweets = await getAllTweets('1275125879555919872');
+
+    const tweet_id = '1275125994190495744'
+    var tweets = await getAllTweets(tweet_id);
     tweets = tweets.reverse();
 
     if (tweets.length == 0) {
@@ -232,7 +234,7 @@ function replaceAll(str, find, replace) {
         await page.setViewport({ width: 600, height: 400, deviceScaleFactor: 2 });
 
         await page.goto(`file:${path.join(__dirname, './generated/tweet.html')}`);
-        await page.screenshot({ path: './generated/tweet.png', fullPage: true });
+        await page.screenshot({ path: `./generated/tweet-${tweet_id}.png`, fullPage: true });
         await browser.close();
 
     }
