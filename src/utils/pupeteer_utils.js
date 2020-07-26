@@ -5,7 +5,12 @@ module.exports = {
 };
 
 async function getScreenshot(html){
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        'args' : [
+          '--no-sandbox',
+          '--disable-setuid-sandbox'
+        ]
+      });
     const page = await browser.newPage();
     await page.setViewport({ width: 600, height: 400, deviceScaleFactor: 2 });
 
