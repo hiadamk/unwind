@@ -12,7 +12,7 @@ async function getScreenshot(html){
         ]
       });
     const page = await browser.newPage();
-    await page.setViewport({ width: 600, height: 400, deviceScaleFactor: 2 });
+    await page.setViewport({ width: 600, height: 100, deviceScaleFactor: 2 });
 
     await page.goto(`data:text/html,${html}`, { waitUntil: 'networkidle0' });
     const image = await page.screenshot({fullPage: true, encoding: 'binary', });
