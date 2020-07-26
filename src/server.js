@@ -25,7 +25,7 @@ app.post('/api/tweet/', async function(req, res){
   tweets.reverse();
   const html = html_utils.generateImageHTML(tweets);
   const image = await pupeteer_utils.getScreenshot(html);
-  res.contentType('image/jpeg');
+  res.contentType('image/png');
   res.send(image);
 })
 
