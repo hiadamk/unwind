@@ -29,6 +29,6 @@ app.post('/api/tweet/', async function(req, res){
   res.send(image);
 })
 
-app.listen(3000,function() {
+app.listen(process.env.PORT,function() {
     console.log('Server is Live')
 });
