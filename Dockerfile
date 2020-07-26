@@ -20,9 +20,18 @@ RUN apt-get install -y --no-install-recommends libgconf-2-4 fontconfig curl sudo
     && apt-get purge --auto-remove -y curl \
     && rm -rf /var/lib/apt/lists/* /usr/share/icons/Adwaita/256x256/apps
 
+# It's a good idea to use dumb-init to help prevent zombie chrome processes.
+ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
+RUN chmod +x /usr/local/bin/dumb-init
+
+# Uncomment to skip the chromium download when installing puppeteer. 
+# If you do, you'll need to launch puppeteer with:
+#     browser.launch({executablePath: 'google-chrome-unstable'})
+# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true    
+
 USER node
 RUN npm install
 COPY --chown=node:node . .
 EXPOSE 3000
-
+ENTRYPOINT ["dumb-init", "--"]
 CMD [ "npm", "start" ]
