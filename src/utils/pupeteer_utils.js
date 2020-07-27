@@ -12,7 +12,8 @@ async function getScreenshot(html){
     const browser = await puppeteer.launch({
         'args' : [
           '--no-sandbox',
-          '--disable-setuid-sandbox'
+          '--disable-setuid-sandbox',
+          '--disable-web-security'
         ]
       });
     const page = await browser.newPage();
