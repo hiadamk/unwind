@@ -41,7 +41,7 @@ function generateTweetCard(tweet_details) {
         `
     }
 
-    return twemoji.parse(`
+    return `
     <div class="container my-3">
         <div class="card">
             <div class="card-body">
@@ -73,7 +73,7 @@ function generateTweetCard(tweet_details) {
             </div>
         </div>
     </div>
-`)
+`
 }
 
 function formatTweetText(tweetDetails) {
