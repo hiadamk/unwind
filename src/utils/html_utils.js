@@ -1,5 +1,6 @@
 const regex_utils = require("./regex_utils");
-const twemoji = require("twemoji")
+const twemoji = require("twemoji");
+const runes = require('runes');
 
 module.exports = {
     addDashedConnector: addDashedConnector,
@@ -76,18 +77,29 @@ function generateTweetCard(tweet_details) {
 `)
 }
 
-function formatTweetText(tweetDetails) {
+function formatTweetText(tweet) {
 
-    var tweet = tweetDetails;
-    var text = tweet.tweet_text;
-    const urls = tweet.urls;
-    const user_mentions = tweet.user_mentions;
-    const hashtags = tweet.hashtags;
-    const symbols = tweet.symbols;
-    const quoted_tweet_id = tweet.quoted_tweet_id
+    var text = tweet.full_text;
+    const urls = tweet.extended_entities == null ? [] : tweet.extended_entities.urls;
+    const user_mentions = tweet.entities == null ? [] : tweet.entities.user_mentions;
+    const hashtags = tweet.entities == null ? [] : tweet.entities.hashtags;
+    const symbols = tweet.entities == null ? [] : tweet.entities.symbols;
+    const quoted_tweet_id = tweet.quoted_status_id_str
 
-    for (var i = 0; i < urls.length; i++) {
-        text = regex_utils.replaceAll(text, urls[i].url, `<span class="url">${urls[i].expanded_url}</span>`);
+    text = runes.substr(text, tweet.display_text_range[0], tweet.display_text_range[1]).replace(/\n/g, "<br />");
+
+    var media = null;
+    if(tweet.extended_entities != null){
+        media = tweet.extended_entities.media;
+        for (var i = 0; i < media.length; i++) {
+            text = regex_utils.replaceAll(text, media[i].url, '');
+        } 
+    }
+
+    if(urls != null){
+        for (var i = 0; i < urls.length; i++) {
+            text = regex_utils.replaceAll(text, urls[i].url, `<span class="url">${urls[i].expanded_url}</span>`);
+        }
     }
 
     for (var i = 0; i < user_mentions.length; i++) {
@@ -103,7 +115,7 @@ function formatTweetText(tweetDetails) {
         text = regex_utils.replaceAll(text, `$${symbols[i].text}`, `<span class="url">$${symbols[i].text}</span>`)
     }
 
-    if(tweet.isQuote){
+    if(tweet.is_quote_status){
         const url_regex = new RegExp(/<span class="url">https?:\/\/twitter\.com\/\w+\/status(es)?\/(\d+)(\?s=\d+)?<\/span>/g)
         matches = text.match(url_regex)
         if(matches != null){
@@ -117,7 +129,6 @@ function formatTweetText(tweetDetails) {
         }
     }
 
-
     tweet.tweet_text = text
     return text;
 }
@@ -127,12 +138,10 @@ function generateImageHTML(tweets){
 
         for (var i = 0; i < tweets.length; i++) {
             if (typeof tweets[i] === 'object' && tweets[i] !== null) {
-                tweets[i].tweet_text = formatTweetText(tweets[i])
-                cards_str = cards_str + generateTweetCard(tweets[i])
+                cards_str = cards_str + generateTweetCard(tweets[i]);
             } else {
                 cards_str = cards_str + tweets[i]
             }
-
         }
 
         const html =
@@ -209,6 +218,5 @@ function generateImageHTML(tweets){
                 </body>
             </html>
         `
-
         return html
 }

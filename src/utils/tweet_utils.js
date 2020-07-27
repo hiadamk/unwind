@@ -40,7 +40,7 @@ async function getTweet(id) {
         return tweet
     } else {
         return {
-            'tweet_text': runes.substr(tweet.data.full_text, tweet.data.display_text_range[0], tweet.data.display_text_range[1]).replace(/\n/g, "<br />"),
+            'tweet_text': html_utils.formatTweetText(tweet.data),
             'user': tweet.data.user.name,
             'user_handle': tweet.data.user.screen_name,
             'user_display_image': tweet.data.user.profile_image_url_https.replace('_normal', ''),
@@ -54,7 +54,7 @@ async function getTweet(id) {
             'quoted_tweet_id': tweet.data.quoted_status_id_str,
             'in_reply_to_status_id': tweet.data.in_reply_to_status_id_str,
             'isReply' : tweet.data.in_reply_to_status_id_str != null
-        }
+        };
     }
 }
 
