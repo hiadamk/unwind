@@ -199,7 +199,5 @@ function generateImageHTML(tweets){
             </html>
         `
 
-        console.log(html)
-
         return html
 }
