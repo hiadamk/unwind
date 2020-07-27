@@ -4,6 +4,10 @@ module.exports = {
     getScreenshot: getScreenshot,
 };
 
+function wait (ms) {
+    return new Promise(resolve => setTimeout(() => resolve(), ms));
+  }
+  
 async function getScreenshot(html){
     const browser = await puppeteer.launch({
         'args' : [
