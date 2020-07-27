@@ -15,7 +15,7 @@ async function getScreenshot(html){
     await page.setViewport({ width: 600, height: 100, deviceScaleFactor: 2 });
 
     await page.goto(`data:text/html,${html}`, { waitUntil: 'networkidle0' });
-    const image = await page.screenshot({fullPage: true, encoding: 'binary', });
+    const image = await page.screenshot({fullPage: true, encoding: 'binary', fromSurface: true});
     await browser.close();
     return image;
 }

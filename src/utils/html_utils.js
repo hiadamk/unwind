@@ -144,6 +144,7 @@ function generateImageHTML(tweets){
                     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
                     <link rel="stylesheet" type="text/css" href="styles.css">
                     <title>Tweet</title>
+                    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
                     <style type="text/css">
                         body {
                             background-color: white;
