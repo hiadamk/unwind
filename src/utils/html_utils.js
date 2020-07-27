@@ -41,7 +41,7 @@ function generateTweetCard(tweet_details) {
         `
     }
 
-    return `
+    return twemoji.parse(`
     <div class="container my-3">
         <div class="card">
             <div class="card-body">
@@ -73,7 +73,7 @@ function generateTweetCard(tweet_details) {
             </div>
         </div>
     </div>
-`
+`)
 }
 
 function formatTweetText(tweetDetails) {
@@ -144,6 +144,7 @@ function generateImageHTML(tweets){
                     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
                     <link rel="stylesheet" type="text/css" href="styles.css">
                     <title>Tweet</title>
+                    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
                     <style type="text/css">
                         body {
                             background-color: white;
@@ -191,6 +192,12 @@ function generateImageHTML(tweets){
                         .card-text {
                             word-wrap: break-word;
                         }
+                        img.emoji {
+                            height: 1em;
+                            width: 1em;
+                            margin: 0 .05em 0 .1em;
+                            vertical-align: -0.1em;
+                         }
                     </style>
                 </head>
                 <body>
