@@ -17,8 +17,26 @@ module.exports = {
 };
 
 async function getTweet(id) {
-    const tweet = await twitter.get('statuses/show/:id', { id: id, tweet_mode: 'extended' }).catch((error) => { return { 'data': error.message, 'isError': true } })
+    const tweet = await twitter.get('statuses/show/:id', { id: id, tweet_mode: 'extended' }).catch((error) => { return { 'data': error, 'isError': true } })
     if (tweet.isError) {
+        if(tweet.data.statusCode == 403 && tweet.data.code == 179){
+            return {
+                'tweet_text': 'Unable to get tweets from private account',
+                'user': 'Private Account',
+                'user_handle': 'private',
+                'user_display_image': 'https://merriam-webster.com/assets/mw/images/article/art-wap-landing-mp-lg/egg-3442-4c317615ec1fd800728672f2c168aca5@1x.jpg',
+                'date': moment(),
+                'urls': [],
+                'user_mentions': [],
+                'hashtags': [],
+                'symbols': [],
+                'media': [],
+                'isQuote': false,
+                'quoted_tweet_id': null,
+                'in_reply_to_status_id': null,
+                'isReply' : false
+            }
+        }
         return tweet
     } else {
         return {

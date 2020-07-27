@@ -98,6 +98,7 @@ function formatTweetText(tweetDetails) {
         text = regex_utils.replaceAll(text, `#${hashtags[i].text}`, `<span class="url">#${hashtags[i].text}</span>`);
     }
 
+
     for (var i = 0; i < symbols.length; i++) {
         text = regex_utils.replaceAll(text, `$${symbols[i].text}`, `<span class="url">$${symbols[i].text}</span>`)
     }
@@ -115,6 +116,7 @@ function formatTweetText(tweetDetails) {
             }
         }
     }
+
 
     tweet.tweet_text = text
     return text;
