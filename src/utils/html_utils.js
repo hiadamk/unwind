@@ -107,8 +107,10 @@ function formatTweetText(tweetDetails) {
         matches = text.match(url_regex)
         if(matches != null){
             for (var i = 0; i < matches.length; i++) {
-                if(matches[i].includes(quoted_tweet_id)){
+                if(matches[i].includes(quoted_tweet_id) && tweet.isReply ){
                     text = text.replace(matches[i], '[Quoted Tweet Shown Below]')
+                }else{
+                    text = text.replace(matches[i], '')
                 }
             }
         }
