@@ -7,7 +7,7 @@ module.exports = {
 function wait (ms) {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
   }
-  
+
 async function getScreenshot(html){
     const browser = await puppeteer.launch({
         'args' : [
@@ -33,7 +33,7 @@ async function getScreenshot(html){
         await page.evaluate(_viewportHeight => {
         window.scrollBy(0, _viewportHeight);
         }, viewportHeight);
-        await wait(20);
+        await wait(200);
         viewportIncr = viewportIncr + viewportHeight;
     }
 
@@ -43,7 +43,7 @@ async function getScreenshot(html){
     });
 
     // Some extra delay to let images load
-    await wait(200);
+    await wait(500);
     
     const image = await page.screenshot({fullPage: true, encoding: 'binary', fromSurface: true});
     await browser.close();
