@@ -1,4 +1,5 @@
 const regex_utils = require("./regex_utils");
+const twemoji = require("twemoji")
 
 module.exports = {
     addDashedConnector: addDashedConnector,
@@ -40,7 +41,7 @@ function generateTweetCard(tweet_details) {
         `
     }
 
-    return `
+    return twemoji.parse(`
     <div class="container my-3">
         <div class="card">
             <div class="card-body">
@@ -72,7 +73,7 @@ function generateTweetCard(tweet_details) {
             </div>
         </div>
     </div>
-`
+`)
 }
 
 function formatTweetText(tweetDetails) {
@@ -146,6 +147,12 @@ function generateImageHTML(tweets){
                     <style type="text/css">
                         body {
                             background-color: white;
+                        }
+                        img.emoji {
+                            height: 1em;
+                            width: 1em;
+                            margin: 0 .05em 0 .1em;
+                            vertical-align: -0.1em;
                         }
                         
                         p {
