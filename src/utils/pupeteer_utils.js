@@ -18,7 +18,7 @@ async function getScreenshot(html){
     const page = await browser.newPage();
     await page.setViewport({ width: 600, height: 100, deviceScaleFactor: 2 });
 
-    await page.goto(`data:text/html,${html}`, { waitUntil: 'networkidle0' });
+    await page.goto(`data:text/html,${html}`, { waitUntil: 'load' });
 
 
     // Get the height of the rendered page
@@ -45,7 +45,7 @@ async function getScreenshot(html){
     // Some extra delay to let images load
     await wait(500);
     
-    const image = await page.screenshot({fullPage: true, encoding: 'binary', fromSurface: true});
+    const image = await page.screenshot({fullPage: true, encoding: 'binary'});
     await browser.close();
     return image;
 }
