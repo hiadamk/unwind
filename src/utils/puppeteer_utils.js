@@ -18,7 +18,7 @@ async function getScreenshot(html, resolution) {
     }else if(resolution == 'low'){
         res = 1;
     }else{
-        return new Buffer(0)
+        return new Buffer.alloc(0)
     }
 
     const browser = await puppeteer.launch({
