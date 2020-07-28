@@ -1,19 +1,32 @@
 const puppeteer = require('puppeteer');
 const imagemin = require('imagemin');
 const imageminPngquant = require('imagemin-pngquant');
+const e = require('express');
 
 module.exports = {
     getScreenshot: getScreenshot,
 };
 
-async function getScreenshot(html) {
+async function getScreenshot(html, resolution) {
+
+    var res;
+
+    if(resolution == 'high'){
+        res = 2;
+    }else if(resolution == 'medium'){
+        res = 1.5;
+    }else if(resolution == 'low'){
+        res = 1;
+    }else{
+        return new Buffer(0)
+    }
 
     const browser = await puppeteer.launch({
         'args': process.env.PUPPETEER_LAUNCH_ARGS.split(' ')
     });
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36')
-    await page.setViewport({ width: 600, height: 100, deviceScaleFactor: 2 });
+    await page.setViewport({ width: 600, height: 100, deviceScaleFactor: res });
     await page.goto("about:blank")
     await page.setContent(html, {waitUntil: 'networkidle0'});
     const image = await page.screenshot({ fullPage: true, encoding: 'binary' });

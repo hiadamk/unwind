@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 app.post('/api/tweet/', async function(req, res){
 
-  if(req.body.url == null){
+  if(req.body.url == null || req.body.resolution == null){
     res.send({'is_err' : true, 'err_msg' : 'No Url'})
     return
   }
@@ -24,7 +24,7 @@ app.post('/api/tweet/', async function(req, res){
   const tweets = await tweet_utils.getAllTweets(tweet_id);
   tweets.reverse();
   const html = html_utils.generateImageHTML(tweets);
-  const image = await pupeteer_utils.getScreenshot(html);
+  const image = await pupeteer_utils.getScreenshot(html, req.body.resolution.toLowerCase());
   res.contentType('image/png');
   res.send(image);
 })
