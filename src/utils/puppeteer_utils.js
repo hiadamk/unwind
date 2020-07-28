@@ -13,7 +13,7 @@ async function getScreenshot(html) {
     });
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36')
-    await page.setViewport({ width: 600, height: 100, deviceScaleFactor: 1 });
+    await page.setViewport({ width: 600, height: 100, deviceScaleFactor: 2 });
     await page.goto("about:blank")
     await page.setContent(html, {waitUntil: 'networkidle0'});
     const image = await page.screenshot({ fullPage: true, encoding: 'binary' });
