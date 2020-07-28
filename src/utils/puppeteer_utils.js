@@ -8,7 +8,6 @@ module.exports = {
 
 async function getScreenshot(html) {
 
-    console.log(process.env.PUPPETEER_LAUNCH_ARGS.split(' '))
     const browser = await puppeteer.launch({
         'args': process.env.PUPPETEER_LAUNCH_ARGS.split(' ')
     });
