@@ -80,10 +80,10 @@ function generateTweetCard(tweet_details) {
 function formatTweetText(tweet) {
 
     var text = tweet.full_text;
-    const urls = tweet.extended_entities == null ? [] : tweet.extended_entities.urls;
-    const user_mentions = tweet.entities == null ? [] : tweet.entities.user_mentions;
-    const hashtags = tweet.entities == null ? [] : tweet.entities.hashtags;
-    const symbols = tweet.entities == null ? [] : tweet.entities.symbols;
+    const urls = tweet.entities.urls;
+    const user_mentions = tweet.entities.user_mentions;
+    const hashtags = tweet.entities.hashtags;
+    const symbols = tweet.entities.symbols;
     const quoted_tweet_id = tweet.quoted_status_id_str
 
     text = runes.substr(text, tweet.display_text_range[0], tweet.display_text_range[1]).replace(/\n/g, "<br />");
