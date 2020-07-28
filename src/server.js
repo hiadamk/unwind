@@ -2,7 +2,7 @@ const express = require('express');
 const tweet_utils = require('./utils/tweet_utils');
 const regex_utils = require('./utils/regex_utils');
 const html_utils = require('./utils/html_utils');
-const pupeteer_utils = require('./utils/pupeteer_utils');
+const pupeteer_utils = require('./utils/puppeteer_utils');
 const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());       // to support JSON-encoded bodies
