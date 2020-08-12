@@ -1,5 +1,4 @@
 module.exports = {
-    escapeRegExp: escapeRegExp,
     replaceAll: replaceAll,
     getTweetId : getTweetId,
 };
@@ -16,5 +15,10 @@ function replaceAll(str, find, replace) {
 
 function getTweetId(url){
     match = url.match(tweet_url_regex);
-    return match[2];
+
+    if(match != null){
+        return match[2];
+    }else{
+        return null;
+    }
 }

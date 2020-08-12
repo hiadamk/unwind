@@ -4,7 +4,6 @@ const runes = require('runes');
 
 module.exports = {
     addDashedConnector: addDashedConnector,
-    generateTweetCard : generateTweetCard,
     formatTweetText : formatTweetText,
     generateImageHTML : generateImageHTML
 };
@@ -77,6 +76,10 @@ function generateTweetCard(tweet_details) {
 `)
 }
 
+function replaceBetween(start, end, original, replace) {
+    return original.substring(0, start) + replace + original.substring(end);
+};
+
 function formatTweetText(tweet) {
 
     var text = tweet.full_text;
@@ -86,7 +89,7 @@ function formatTweetText(tweet) {
     const symbols = tweet.entities.symbols;
     const quoted_tweet_id = tweet.quoted_status_id_str
 
-    text = runes.substr(text, tweet.display_text_range[0], tweet.display_text_range[1]).replace(/\n/g, "<br />");
+    text = runes.substr(text, tweet.display_text_range[0], tweet.display_text_range[1] - 1).replace(/\n/g, "<br />");
 
     var media = null;
     if(tweet.extended_entities != null){
@@ -110,9 +113,15 @@ function formatTweetText(tweet) {
         text = regex_utils.replaceAll(text, `#${hashtags[i].text}`, `<span class="url">#${hashtags[i].text}</span>`);
     }
 
-
+    var symbolSet = new Set();
     for (var i = 0; i < symbols.length; i++) {
-        text = regex_utils.replaceAll(text, `$${symbols[i].text}`, `<span class="url">$${symbols[i].text}</span>`)
+        symbolSet.add(symbols[i].text);
+    } 
+
+    symbolSet = Array.from(symbolSet);
+
+    for (var i = 0; i < symbolSet.length; i++) {
+        text = regex_utils.replaceAll(text, `$${symbolSet[i]}`, `<span class="url">$${symbolSet[i]}</span>`);
     }
 
     if(tweet.is_quote_status){

@@ -12,7 +12,6 @@ const html_utils = require('./html_utils')
 
 module.exports = {
     getTweet: getTweet,
-    getTweetImages: getTweetImages,
     getAllTweets : getAllTweets
 };
 
@@ -39,6 +38,10 @@ async function getTweet(id) {
         }
         return tweet
     } else {
+        // console.log(tweet.data)
+        // console.log(tweet.data.entities.urls)
+        // console.log(tweet.data.entities.media)
+
         return {
             'tweet_text': html_utils.formatTweetText(tweet.data),
             'user': tweet.data.user.name,

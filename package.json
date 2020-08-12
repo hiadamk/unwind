@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "local_start": "nodemon -r dotenv/config src/server.js",
-    "test": "jest",
-    "testc": "jest --coverage"
+    "test": "jest --setupFiles dotenv/config",
+    "testc": "jest --setupFiles dotenv/config --coverage"
   },
   "author": "Adam Kona",
   "license": "ISC",
