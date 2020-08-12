@@ -76,10 +76,6 @@ function generateTweetCard(tweet_details) {
 `)
 }
 
-function replaceBetween(start, end, original, replace) {
-    return original.substring(0, start) + replace + original.substring(end);
-};
-
 function formatTweetText(tweet) {
 
     var text = tweet.full_text;
