@@ -12,8 +12,6 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 app.post('/api/tweet/', async function(req, res){
 
-  console.log('BODY : ' + req.body.url);
-  console.log('BODY : ' + req.body.resolution);
   if(req.body.url == null || req.body.resolution == null){
     res.send({'is_err' : true, 'err_msg' : 'No Url'})
     return
