@@ -39,7 +39,7 @@ async function getTweet(id) {
         return tweet
     } else {
         // console.log(tweet.data)
-        // console.log(tweet.data.entities.urls)
+        console.log(tweet.data.entities.urls)
         // console.log(tweet.data.entities.media)
 
         return {

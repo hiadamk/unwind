@@ -85,8 +85,7 @@ function formatTweetText(tweet) {
     const symbols = tweet.entities.symbols;
     const quoted_tweet_id = tweet.quoted_status_id_str
 
-    text = runes.substr(text, tweet.display_text_range[0], tweet.display_text_range[1] - 1).replace(/\n/g, "<br />");
-
+    text = regex_utils.removeTweetURL(text).replace(/\n/g, "<br />");
     var media = null;
     if(tweet.extended_entities != null){
         media = tweet.extended_entities.media;
@@ -135,6 +134,8 @@ function formatTweetText(tweet) {
     }
 
     tweet.tweet_text = text
+
+    console.log(text)
     return text;
 }
 

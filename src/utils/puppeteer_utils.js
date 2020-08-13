@@ -1,7 +1,6 @@
 const puppeteer = require('puppeteer');
 const imagemin = require('imagemin');
 const imageminPngquant = require('imagemin-pngquant');
-const e = require('express');
 
 module.exports = {
     getScreenshot: getScreenshot,
