@@ -7,7 +7,6 @@ const twitter = new Twit({
     timeout_ms:           process.env.twitter_timeout_ms,
 })
 const moment = require('moment');
-const runes = require('runes');
 const html_utils = require('./html_utils')
 
 module.exports = {

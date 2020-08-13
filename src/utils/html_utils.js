@@ -135,7 +135,6 @@ function formatTweetText(tweet) {
 
     tweet.tweet_text = text
 
-    console.log(text)
     return text;
 }
 
