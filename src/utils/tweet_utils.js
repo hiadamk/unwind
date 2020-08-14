@@ -37,6 +37,7 @@ async function getTweet(id) {
         }
         return tweet
     } else {
+        console.log(tweet.data)
         return {
             'tweet_text': html_utils.formatTweetText(tweet.data),
             'user': tweet.data.user.name,

@@ -85,7 +85,9 @@ function formatTweetText(tweet) {
     const symbols = tweet.entities.symbols;
     const quoted_tweet_id = tweet.quoted_status_id_str
 
-    text = regex_utils.removeTweetURL(text).replace(/\n/g, "<br />");
+    if((tweet.display_text_range[1] - tweet.display_text_range[0]) != text.length){
+        text = regex_utils.removeTweetURL(text).replace(/\n/g, "<br />");
+    } 
     var media = null;
     if(tweet.extended_entities != null){
         media = tweet.extended_entities.media;
@@ -119,12 +121,13 @@ function formatTweetText(tweet) {
         text = regex_utils.replaceAll(text, `$${symbolSet[i]}`, `<span class="url">$${symbolSet[i]}</span>`);
     }
 
+    
     if(tweet.is_quote_status){
         const url_regex = new RegExp(/<span class="url">https?:\/\/twitter\.com\/\w+\/status(es)?\/(\d+)(\?s=\d+)?<\/span>/g)
         matches = text.match(url_regex)
         if(matches != null){
             for (var i = 0; i < matches.length; i++) {
-                if(matches[i].includes(quoted_tweet_id) && tweet.isReply ){
+                if(matches[i].includes(quoted_tweet_id)){
                     text = text.replace(matches[i], '[Quoted Tweet Shown Below]')
                 }else{
                     text = text.replace(matches[i], '')
@@ -132,7 +135,6 @@ function formatTweetText(tweet) {
             }
         }
     }
-
     tweet.tweet_text = text
 
     return text;
